@@ -1,0 +1,23 @@
+.symbolsView__content {
+  display: flex;
+  flex-direction: row-reverse;
+  
+}
+
+
+.symbolsView__cards h3{
+  font-size: 20px;
+}
+
+@media (max-width: 1023px) {
+  .symbolsView__priceChart {
+    max-height: 250px;
+    height: 180px;
+    width: 100%;
+  }
+
+  .symbolsView__content {
+    flex-direction: column;
+  } 
+}
+

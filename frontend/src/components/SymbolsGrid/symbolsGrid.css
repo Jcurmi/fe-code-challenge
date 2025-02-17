@@ -1,0 +1,13 @@
+
+.symbolsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  flex: 1; /* Takes up available space */
+  min-height: 0; /* Important for proper flex scrolling */
+  background-color: #e5e4e4;
+  font-size: 14px;
+  padding:16px;
+}
+
+

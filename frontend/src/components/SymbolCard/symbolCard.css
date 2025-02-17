@@ -1,11 +1,68 @@
 .symbolCard {
-  border: 2px solid black; /* just for visibility, feel free to remove it */
-  margin: 10px; /* just for visibility, feel free to remove it */
-  padding: 10px; /* just for visibility, feel free to remove it */
+  background-color: whitesmoke;
+  box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.2);
+  height: fill-content;
+  transition: box-shadow 0.3s ease;
 }
 
 .symbolCard__shake {
   animation: shake 0.62s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+.symbolCard__shake_up_trend {
+  box-shadow: 0 0 10px 2px green;
+}
+
+.symbolCard__shake_down_trend {
+  box-shadow: 0 0 10px 2px red;
+}
+
+.symbolCard__higher {
+  animation: glowGreen 1s ease;
+}
+
+.symbolCard__lower {
+  animation: glowRed 1s ease;
+}
+
+.symbolCard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  color: white;
+  padding: 4px 8px;
+  font-weight: 900;
+  position: relative;
+}
+
+.symbolCard__header img {
+  height: 60px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.symbolCard__price {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+}
+
+.symbolCard__price h3 {
+  font-size: 20px;
+}
+
+.symbolCard--selected {
+  transform: scale(1.1); 
+  transition: transform 0.3s ease;
+}
+
+.symbolCard--not-selected {
+  transform: scale(0.90);
+  transition: transform 0.3s ease;
 }
 
 @keyframes shake {
@@ -34,5 +91,23 @@
   60%,
   70% {
     transform: translateX(6px);
+  }
+}
+
+@keyframes glowGreen {
+  0% {
+    box-shadow: 0 0 10px 2px green;
+  }
+  100% {
+    box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@keyframes glowRed {
+  0% {
+    box-shadow: 0 0 10px 2px red;
+  }
+  100% {
+    box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.2);
   }
 }

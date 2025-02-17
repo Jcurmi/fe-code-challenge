@@ -14,7 +14,7 @@ const connect = () => {
   // };
 
   ws.onmessage = function (e) {
-    // console.log('Message:', e.data);
+    //console.log('Message:', e.data);
     const data = JSON.parse(e.data);
     store.dispatch(
       pricesSlice.actions.updatePrice({
