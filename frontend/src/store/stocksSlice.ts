@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/store/index';
 
-type Stock = {
+export type Stock = {
   symbol: string;
   companyName: string;
   industry: string;
@@ -16,6 +16,8 @@ type StockEntry = {
 
 type StocksState = {
   entities: StockEntry;
+  activeStockId: string | null;
+  showDetails: boolean;
   ids: string[];
   apiState: {
     loading: boolean | null;
@@ -25,6 +27,8 @@ type StocksState = {
 
 const initialState: StocksState = {
   entities: {},
+  showDetails: true,
+  activeStockId: null,
   ids: [],
   apiState: {
     loading: null,
@@ -48,7 +52,14 @@ const apiState = (state: RootState) => state.stocks.apiState;
 const stocksSlice = createSlice({
   name: 'stocks',
   initialState,
-  reducers: {},
+  reducers: {
+    toggleActiveStock(state, action: PayloadAction<string | null>) {
+      state.activeStockId = action.payload;
+    },
+    toggleShowDetails(state, action: PayloadAction<boolean>) {
+      state.showDetails = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchAllStocks.fulfilled, (state, action) => {
@@ -85,5 +96,7 @@ const selectors = {
   apiState
 };
 
-export default stocksSlice;
+export const { toggleActiveStock, toggleShowDetails } = stocksSlice.actions;
 export { selectors };
+export default stocksSlice;
+
