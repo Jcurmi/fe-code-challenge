@@ -1,45 +1,54 @@
-import { useEffect } from 'react';
-import './priceChart.css';
-import { Line, LineChart, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux';
-import { fetchPriceHistory, selectors } from '@/store/priceHistorySlice';
-import Loading from '@/components/Loading';
-type PriceChartProps = {
-  symbolId: string | null;
-};
+import "./priceChart.css";
+import { Line, LineChart, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { useAppSelector } from "@/hooks/redux";
+import { selectors } from "@/store/priceHistorySlice";
+import Loading from "@/components/Loading";
+import { useMemo } from "react";
 
-const PriceChart = ({ symbolId }: PriceChartProps) => {
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    if (symbolId) {
-      dispatch(fetchPriceHistory(symbolId));
-    }
-  }, [dispatch, symbolId]);
+const PriceChart = () => {
+	const symbolId = useAppSelector((state) => state.stocks.activeStockId);
+	const apiState = useAppSelector(selectors.apiState);
+	const data = useAppSelector(selectors.selectPriceHistory);
+	const symbolInfo = useAppSelector(selectors.selectSymbolInfo);
 
-  const apiState = useAppSelector(selectors.apiState);
-  const data = useAppSelector(selectors.selectPriceHistory);
-  const symbolInfo = useAppSelector(selectors.selectSymbolInfo);
+	// Memoized transformation for the chart data
+	const chartData = useMemo(
+		() =>
+			data.map((e) => ({
+				...e,
+				time: new Date(e.time).toLocaleTimeString(),
+			})),
+		[data],
+	);
 
-  if (apiState.loading && symbolId !== null)
-    return (
-      <div className="priceChart">
-        <Loading />
-      </div>
-    );
-  if (apiState.error) return <div className="priceChart">Failed to get price history!</div>;
-  if (!symbolId) return <div className="priceChart">Select stock</div>;
-  return (
-    <div className="priceChart">
-      <div>{symbolInfo}</div>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data.map((e) => ({ ...e, time: new Date(e.time).toLocaleTimeString() }))}>
-          <Line type="monotone" dataKey="price" stroke="#8884d8" dot={false} />
-          <XAxis dataKey="time" />
-          <YAxis />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
+	return (
+		<div className="priceChart">
+			{apiState.loading && symbolId !== null && <Loading />}
+			{apiState.error && <span>Failed to get price history!</span>}
+			{!symbolId && <span>Select stock</span>}
+			{!apiState.loading && !apiState.error && symbolId && data.length > 0 ? (
+				<>
+					<div>{symbolInfo}</div>
+					<ResponsiveContainer width="100%" height="100%">
+						<LineChart data={chartData}>
+							<Line
+								type="monotone"
+								dataKey="price"
+								stroke="#8884d8"
+								dot={false}
+							/>
+							<XAxis dataKey="time" />
+							<YAxis />
+						</LineChart>
+					</ResponsiveContainer>
+				</>
+			) : (
+				!apiState.loading &&
+				!apiState.error &&
+				symbolId && <span>No price data available</span>
+			)}
+		</div>
+	);
 };
 
 export default PriceChart;
