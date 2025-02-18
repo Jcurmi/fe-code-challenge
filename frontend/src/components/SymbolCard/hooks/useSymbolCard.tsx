@@ -48,24 +48,10 @@ export const useSymbolCard = (
 		}`;
 	}, [cardShake, cardGlow, symbolId, id]);
 
-	// Handle symbol click
 	const handleSymbolClick = (event: React.MouseEvent) => {
 		event.stopPropagation();
 		dispatch(toggleActiveStock(id));
 	};
-
-	// Click outside detection
-	const cardRef = useRef<HTMLDivElement>(null);
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
-				dispatch(toggleActiveStock(null));
-			}
-		};
-
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [dispatch]);
 
 	return {
 		stock,

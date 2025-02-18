@@ -29,10 +29,9 @@ const SymbolCard = ({ id, token }: SymbolCardProps) => {
 	} = useSymbolCard(id, token);
 
 	const showCardInfo = useAppSelector(selectShowCardInfo);
-	const cardRef = useRef<HTMLDivElement>(null);
 
 	return (
-		<div ref={cardRef} onClick={handleSymbolClick} className={cardClassName}>
+		<div onClick={handleSymbolClick} className={cardClassName}>
 			<SymbolCardHeader id={id} trendColor={trendColor} trend={stock?.trend} />
 			<SymbolCardPrice formattedPrice={formattedPrice} />
 			{showCardInfo && <SymbolCardInfo stock={stock} />}
