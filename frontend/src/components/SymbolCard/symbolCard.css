@@ -6,7 +6,7 @@
 }
 
 .symbolCard__shake {
-  animation: shake 0.62s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  animation: shake 0.62s cubic-bezier(0.36, 0.07, 0.19, 0.97) both !important;
 }
 .symbolCard__shake_up_trend {
   box-shadow: 0 0 10px 2px green;
