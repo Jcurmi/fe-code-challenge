@@ -1,43 +1,37 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
 interface Item {
   id: string;
   price: number;
+  shake: boolean;
+  trend: 'UP' | 'DOWN' | null;
 }
 
-interface PriceState {
-  [key: string]: {
-    price: number;
-    alert: boolean;
-    trend: 'UP' | 'DOWN' | null;
-  };
+interface PricesState {
+  [id: string]: Item;
 }
+
+const initialState: PricesState = {};
 
 const pricesSlice = createSlice({
   name: 'prices',
-  initialState: {} as PriceState,
+  initialState,
   reducers: {
-    updatePrice: (state, action: PayloadAction<Item>) => {
+    updatePrice: (state, action: PayloadAction<{ id: string; price: number }>) => {
       const { id, price } = action.payload;
-      const previousPrice = state[id]?.price;
+      const previousPrice = state[id]?.price ?? price;
+      const priceChangePercentage =
+        previousPrice > 0 ? Math.abs((price - previousPrice) / previousPrice) * 100 : 0;
 
-      const priceChangePercentage = Math.abs((price - previousPrice) / previousPrice) * 100;
+
       state[id] = {
+        id,
         price,
-        alert: priceChangePercentage >= 25,
-        trend: price > previousPrice ? 'UP' : price < previousPrice ? 'DOWN' : null
-
-
+        shake: priceChangePercentage >= 25,
+        trend: price > previousPrice ? 'UP' : price < previousPrice ? 'DOWN' : null,
       };
-    },
-    resetShake: (state, action: PayloadAction<string>) => {
-      const id = action.payload;
-      if (state[id]) {
-        state[id].alert = false;
-      }
     },
   },
 });
 
-export const { updatePrice, resetShake } = pricesSlice.actions;
+export const { updatePrice } = pricesSlice.actions;
 export default pricesSlice;

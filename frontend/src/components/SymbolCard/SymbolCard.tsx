@@ -2,46 +2,39 @@ import "./symbolCard.css";
 
 import { useSymbolCard } from "./hooks/useSymbolCard";
 
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { toggleActiveStock } from "@/store/stocksSlice";
+import { useAppSelector } from "@/hooks/redux";
+
 import { selectShowCardInfo } from "@/store/dashboardOptionsSlice";
 import SymbolCardInfo from "./src/SymbolCardInfo";
+import { useRef } from "react";
+import SymbolCardHeader from "./src/SymbolCardHeader";
+import SymbolCardPrice from "./src/SymbolCardPrice";
 
 type SymbolCardProps = {
 	id: string;
-	price: {
+	token: {
 		price: number;
-		alert: boolean;
+		shake: boolean;
 		trend: "UP" | "DOWN" | null;
 	};
 };
 
-const SymbolCard = ({ id, price }: SymbolCardProps) => {
-	const dispatch = useAppDispatch();
-	const symbolId = useAppSelector((state) => state.stocks.activeStockId);
-	const showCardInfo = useAppSelector(selectShowCardInfo);
-	const { stock, trendColor, formattedPrice, cardClassName } = useSymbolCard(
-		id,
-		symbolId,
-		price,
-	);
+const SymbolCard = ({ id, token }: SymbolCardProps) => {
+	const {
+		stock,
+		trendColor,
+		formattedPrice,
+		cardClassName,
+		handleSymbolClick,
+	} = useSymbolCard(id, token);
 
-	const handleSymbolClick = (symbolId: string | null) => {
-		dispatch(toggleActiveStock(symbolId));
-	};
+	const showCardInfo = useAppSelector(selectShowCardInfo);
+	const cardRef = useRef<HTMLDivElement>(null);
 
 	return (
-		<div onClick={() => handleSymbolClick(id)} className={cardClassName}>
-			<div className="symbolCard__header">
-				<span>{id}</span>
-				{stock?.trend && (
-					<img src={`/src/assets/${trendColor}.png`} alt="trend" />
-				)}
-			</div>
-			<div className="symbolCard__price">
-				<span>Price:</span>
-				<h3>{formattedPrice}</h3>
-			</div>
+		<div ref={cardRef} onClick={handleSymbolClick} className={cardClassName}>
+			<SymbolCardHeader id={id} trendColor={trendColor} trend={stock?.trend} />
+			<SymbolCardPrice formattedPrice={formattedPrice} />
 			{showCardInfo && <SymbolCardInfo stock={stock} />}
 		</div>
 	);

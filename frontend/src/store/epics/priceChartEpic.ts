@@ -1,4 +1,4 @@
-import { combineEpics, ofType } from "redux-observable";
+import { ofType } from "redux-observable";
 import { filter, map } from "rxjs/operators";
 import { toggleActiveStock } from "@/store/stocksSlice";
 import { fetchPriceHistory } from "@/store/priceHistorySlice";
@@ -17,8 +17,4 @@ const fetchPriceHistoryEpic: Epic = (
 		map(() => fetchPriceHistory(state$.value.stocks.activeStockId as string)),
 	);
 
-export const rootEpic = combineEpics(
-	fetchPriceHistoryEpic
-);
-
-export default rootEpic;
+export default fetchPriceHistoryEpic;

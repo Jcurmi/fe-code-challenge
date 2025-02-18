@@ -1,16 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { createEpicMiddleware } from 'redux-observable';
+import { createEpicMiddleware, type Epic } from 'redux-observable';
 import pricesSlice from './pricesSlice';
 import thunkMiddleware from 'redux-thunk';
 import stocksSlice from '@/store/stocksSlice';
 import priceHistorySlice from '@/store/priceHistorySlice';
 import { dashboardOptionsSlice } from '@/store/dashboardOptionsSlice';
-import rootEpic from '@/components/PriceChart/epics/epics';
-
+import fetchPriceHistoryEpic from './epics/priceChartEpic';
 
 
 const epicMiddleware = createEpicMiddleware();
+
+
+const rootEpic: Epic = (
+  fetchPriceHistoryEpic
+)
 
 
 export const store = configureStore({
